@@ -2,13 +2,11 @@ var prods = [];
 var prodsToBeAdded = [];
 
 function getProducts() {
-    var arr;
     $.ajax({
         url: "http://private-32dcc-products72.apiary-mock.com/product",
         success: function (response) {
-            arr = response;
-            for (var i in arr) {
-                var item = arr[i];
+            for (var i in response) {
+                var item = response[i];
                 prods.push(item);
                 i++;
             }
@@ -16,11 +14,12 @@ function getProducts() {
     });
 };
 
+
 function displayProds() {
     for (var i in prods) {
         var prod = prods[i];
         for (var key in prod) {
-            if (key == 'id') {
+            if (key === 'id') {
                 var product = "<div class='prod col-xs-12 col-sm-12 col-md-12 col-lg-12 " + prod['id'] + "'>";
                 product += "<div class='prod-name col-xs-3 col-sm-6 col-md-6 col-lg-6'>" + prod['name'] + "</div>";
                 product += "<div class='amount col-xs-5 col-sm-3 col-md-3 col-lg-3'>";
@@ -37,7 +36,7 @@ function displayProds() {
 };
 
 function showEmptyCart() {
-    if (prodsToBeAdded == "") {
+    if (prodsToBeAdded.length === 0) {
         $('.cart').append(emptyCart);
     }
 }
@@ -49,7 +48,7 @@ function showFullCart() {
 
 function addProds() {
     $('.add').on('click', function () {
-        if ($('.cart-products').length == 0) {
+        if ($('.cart-products').length === 0) {
             showFullCart();
         }
         var selectedProd = $(this).attr('data-id');
@@ -61,9 +60,7 @@ function addProds() {
             }
         }
     });
-}
-
-
+};
 
 $(document).ready(function () {
     getProducts();
