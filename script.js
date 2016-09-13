@@ -5,15 +5,11 @@ function getProducts() {
     var arr;
     $.ajax({
         url: "http://private-32dcc-products72.apiary-mock.com/product",
-        success: function(response) {
+        success: function (response) {
             arr = response;
             for (var i in arr) {
                 var item = arr[i];
-                for (var key in item) {
-                    if (key == "id") {
-                        prods.push(item);
-                    }
-                };
+                prods.push(item);
                 i++;
             }
         }
@@ -40,20 +36,41 @@ function displayProds() {
     }
 };
 
+function showEmptyCart() {
+    if (prodsToBeAdded == "") {
+        $('.cart').append(emptyCart);
+    }
+}
+
+function showFullCart() {
+    $('.no-prods').remove();
+    $('.cart').append(fullCart);
+}
+
 function addProds() {
-    $('.add').on('click', function() {
+    $('.add').on('click', function () {
+        if ($('.cart-products').length == 0) {
+            showFullCart();
+        }
         var selectedProd = $(this).attr('data-id');
         console.log(selectedProd + " clicked");
-
+        for (var i in prods) {
+            var index = prods[i];
+            if (selectedProd == index.id) {
+                prodsToBeAdded.push(index);
+            }
+        }
     });
 }
 
 
-$(document).ready(function() {
+
+$(document).ready(function () {
     getProducts();
+    showEmptyCart();
 });
 
-$(document).ajaxComplete(function() {
+$(document).ajaxComplete(function () {
     displayProds();
     addProds();
 });
