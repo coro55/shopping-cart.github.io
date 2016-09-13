@@ -2,19 +2,22 @@ var prods = [];
 var prodsToBeAdded = [];
 
 function getProducts() {
-    var arr;
-    $.ajax({
-        url: "http://private-32dcc-products72.apiary-mock.com/product",
-        success: function (response) {
-            arr = response;
-            for (var i in arr) {
-                var item = arr[i];
-                prods.push(item);
-                i++;
+    if (prods == "") {
+        var arr;
+        $.ajax({
+            url: "http://private-32dcc-products72.apiary-mock.com/product",
+            success: function (response) {
+                arr = response;
+                for (var i in arr) {
+                    var item = arr[i];
+                    prods.push(item);
+                    i++;
+                }
             }
-        }
-    });
+        });
+    }
 };
+
 
 function displayProds() {
     for (var i in prods) {
@@ -61,12 +64,11 @@ function addProds() {
             }
         }
     });
-}
-
-
+};
 
 $(document).ready(function () {
     getProducts();
+    $.cookie("products", prods);
     showEmptyCart();
 });
 
