@@ -4,7 +4,7 @@ var prodsToBeAdded = [];
 function getProducts() {
     $.ajax({
         url: "http://private-32dcc-products72.apiary-mock.com/product",
-        success: function (response) {
+        success: function(response) {
             for (var i in response) {
                 var item = response[i];
                 prods.push(item);
@@ -39,16 +39,26 @@ function showEmptyCart() {
     if (prodsToBeAdded.length === 0) {
         $('.cart').append(emptyCart);
     }
-}
+};
 
 function showFullCart() {
     $('.no-prods').remove();
     $('.cart').append(fullCart);
-}
+};
 
-function stageProds() {
-    $('.add').on('click', function () {
-    var clicked = [];
+function calculateTotal() {
+    var total = 0;
+    $('.unit-val').each(function() {
+        var price = Number($(this).text());
+        total = +total + +price;
+        console.log(total);
+    });
+    $('.amount-total').html(parseFloat(total).toFixed(2));
+};
+
+function addProds() {
+    $('.add').on('click', function() {
+        var clicked = [];
         if ($('.cart-products').length === 0) {
             showFullCart();
         }
@@ -60,28 +70,40 @@ function stageProds() {
                 prodsToBeAdded.push(index);
                 clicked.push(index);
             }
+            $('.' + selectedProd + '').detach();
         }
-        for (var i in clicked){
+        for (var i in clicked) {
             var prodInCart = clicked[i];
-            var cartProd = "<div class='prod-in-cart col-lg-12 col-md-12 col-sm-12 col-xs-12'>";
-            cartProd += "<div class='prod-name col-lg-6 col-md-6 col-sm-6 col-xs-6'><span class='name'>"+ prodInCart.name +"</span><img class='tooltip' src='/res/info.png'></img></div>";
+            var cartProd = "<div class='prod-in-cart col-lg-12 col-md-12 col-sm-12 col-xs-12 " + prodInCart.id + " data-id=" + prodInCart.id + "'>";
+            cartProd += "<div class='prod-name col-lg-6 col-md-6 col-sm-6 col-xs-6'><span class='name'>" + prodInCart.name + "<img src='res/info.png' class='tooltip-icon' alt='info'></img></span><div class='tooltip-text col-lg-2 col-md-2 col-sm-4 col-xs-4 " + prodInCart.id + "'>" + prodInCart.description + "</div></div>";
             cartProd += "<div class='quantity col-lg-2 col-md-2 col-sm-2 col-xs-2'><input type='text' value='1' class='form-control'></div>";
-            cartProd += "<div class='unit-price col-lg-4 col-md-4 col-sm-4 col-xs-4'><span class='currency'>$</span><span class='unit-val pull-left'>"+ prodInCart.price +"</span></div>";
-            cartProd += "<button class='remove'>X</button></div>";
+            cartProd += "<div class='unit-price col-lg-4 col-md-4 col-sm-4 col-xs-4'><span class='currency'>$</span><span class='unit-val'>" + prodInCart.price + "</span>";
+            cartProd += "<button class='remove glyphicon glyphicon-trash' data-remove-id='" + prodInCart.id + "'></button></div></div>";
             $('.added-prods').append(cartProd);
 
         }
-    clicked = [];
+
+        function showTooltip() {
+            $('.tooltip-icon').mouseenter(function() {
+                $('.tooltip-text.' + prodInCart.id + '').show();
+            });
+            $('.tooltip-icon').mouseleave(function() {
+                $('.tooltip-text.' + prodInCart.id + '').hide();
+            });
+        };
+
+        clicked = [];
+        calculateTotal();
+        showTooltip();
     });
 };
 
-
-$(document).ready(function () {
+$(document).ready(function() {
     getProducts();
     showEmptyCart();
 });
 
-$(document).ajaxComplete(function () {
+$(document).ajaxComplete(function() {
     displayProds();
-    stageProds();
+    addProds();
 });

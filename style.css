@@ -9,7 +9,7 @@ html,
 }
 
 .checkout::after {
-    border: 2px solid blue;
+    border: 2px solid #3490e7;
     content: "";
     position: absolute;
     width: 60px;
@@ -36,7 +36,7 @@ html,
 
 .currency,
 .price {
-    color: #3591e6;
+    color: #3490e5;
 }
 
 .add {
@@ -89,11 +89,13 @@ html,
 
 .total{
 	font-size: 20px;
+	text-align: right;
 }
 
 .added-prods{
 	border-bottom: 3px solid;
     padding-bottom: 15px;
+	padding-right: 0 !important;
 }
 
 .continue{
@@ -103,4 +105,38 @@ html,
 .prod-in-cart{
 	padding-top: 10px;
 	font-size: 20px;
+	padding-right: 0 !important;
+}
+
+.unit-price{
+	text-align: right;
+	padding-right: 0 !important;
+}
+
+.unit-val{
+	padding-right: 40px;
+}
+
+.remove{
+	border: none;
+}
+
+.form-control {
+    font-size: 20px !important;
+    text-align: center;
+}
+
+.tooltip-icon{
+	padding-left: 5px;
+	cursor: pointer;
+}
+
+.tooltip-text{
+	background: #fff none repeat scroll 0 0;
+    border: 1px solid #000;
+    display: none;
+    font-size: 15px;
+    margin-top: 15px;
+    position: fixed !important;
+    z-index: 1;
 }
