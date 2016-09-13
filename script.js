@@ -64,6 +64,7 @@ function addProds() {
 
 $(document).ready(function () {
     getProducts();
+    $.cookie("products", prods);
     showEmptyCart();
 });
 
