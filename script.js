@@ -18,20 +18,16 @@ function getProducts() {
 function displayProds() {
     for (var i in prods) {
         var prod = prods[i];
-        for (var key in prod) {
-            if (key === 'id') {
-                var product = "<div class='prod col-xs-12 col-sm-12 col-md-12 col-lg-12 " + prod['id'] + "'>";
-                product += "<div class='prod-name col-xs-3 col-sm-6 col-md-6 col-lg-6'>" + prod['name'] + "</div>";
-                product += "<div class='amount col-xs-5 col-sm-3 col-md-3 col-lg-3'>";
-                product += "<span class='label-price'>Price: </span>";
-                product += "<span class='currency'>$</span>";
-                product += "<span class='price'>" + prod["price"] + "</span>";
-                product += "</div>";
-                product += "<button class='add col-xs-4 col-sm-3 col-md-3 col-lg-3' data-id=" + prod['id'] + "><img src='res/shopping-cart.png' alt='cart'></img><span>Add to cart</span></button>";
-                product += "</div>";
-                $(".add-to-cart").append(product);
-            }
-        }
+        var product = "<div class='prod col-xs-12 col-sm-12 col-md-12 col-lg-12 " + prod['id'] + "'>";
+        product += "<div class='prod-name col-xs-3 col-sm-6 col-md-6 col-lg-6'>" + prod['name'] + "</div>";
+        product += "<div class='amount col-xs-5 col-sm-3 col-md-3 col-lg-3'>";
+        product += "<span class='label-price'>Price: </span>";
+        product += "<span class='currency'>$</span>";
+        product += "<span class='price'>" + prod["price"] + "</span>";
+        product += "</div>";
+        product += "<button class='add col-xs-4 col-sm-3 col-md-3 col-lg-3' data-id=" + prod['id'] + "><img src='res/shopping-cart.png' alt='cart'></img><span>Add to cart</span></button>";
+        product += "</div>";
+        $(".add-to-cart").append(product);
     }
 };
 
