@@ -1,10 +1,9 @@
 var prods = [];
-var prodsToBeAdded = [];
 
 function getProducts() {
-    $.ajax({
+    return $.ajax({
         url: "http://private-32dcc-products72.apiary-mock.com/product",
-        success: function (response) {
+        success: function(response) {
             for (var i in response) {
                 var item = response[i];
                 prods.push(item);
@@ -13,7 +12,6 @@ function getProducts() {
         }
     });
 };
-
 
 function displayProds() {
     for (var i in prods) {
@@ -32,19 +30,51 @@ function displayProds() {
 };
 
 function showEmptyCart() {
-    if (prodsToBeAdded.length === 0) {
-        $('.cart').append(emptyCart);
-    }
+    $('.no-prods').remove();
+    $('.full-cart').remove();
+    $('.cart').append(emptyCart);
 };
 
 function showFullCart() {
+    $('.full-cart').remove();
     $('.no-prods').remove();
     $('.cart').append(fullCart);
+
+};
+
+$('remove').each(function() { $(this).click() })
+
+function removeProds() {
+    // $('.remove').each(function() {
+        $('.remove').on('click',function() {
+            var id = $(this).attr('data-remove-id');
+            $('.prod-in-cart.' + id).remove();
+            if ($('.prod-in-cart').length === 0) {
+                showEmptyCart();
+            }
+            for (var i in prods) {
+                var prod = prods[i];
+                if (id == prod['id'] && $('.prod.' + prod['id']).length == 0) {
+                    var product = "<div class='prod col-xs-12 col-sm-12 col-md-12 col-lg-12 " + prod['id'] + "'>";
+                    product += "<div class='prod-name col-xs-3 col-sm-6 col-md-6 col-lg-6'>" + prod['name'] + "</div>";
+                    product += "<div class='amount col-xs-5 col-sm-3 col-md-3 col-lg-3'>";
+                    product += "<span class='label-price'>Price: </span>";
+                    product += "<span class='currency'>$</span>";
+                    product += "<span class='price'>" + prod["price"] + "</span>";
+                    product += "</div>";
+                    product += "<button class='add col-xs-4 col-sm-3 col-md-3 col-lg-3' data-id=" + prod['id'] + "><img src='res/shopping-cart.png' alt='cart'></img><span>Add to cart</span></button>";
+                    product += "</div>";
+                    $(".add-to-cart").append(product);
+                }
+            }
+        });
+
+    // });
 };
 
 function calculateTotal() {
     var total = 0;
-    $('.unit-val').each(function () {
+    $('.unit-val').each(function() {
         var price = Number($(this).text());
         total += price;
     });
@@ -52,16 +82,18 @@ function calculateTotal() {
 };
 
 function updateTotal() {
-    $('.form-control').blur(function () {
+    $('.form-control').blur(function() {
         calculateTotal();
     });
 };
 
 function updateQtyAndPrice() {
-    $('.form-control').blur(function () {
+    $('.form-control').blur(function() {
         $('.form-control').trigger('change');
         if ($(this).val() < 1) {
             $(this).val('1');
+        } else {
+            $(this).val($(this).val().replace('.', ''));
         }
         var prodId = $(this).attr('data-unit');
         var price;
@@ -72,13 +104,13 @@ function updateQtyAndPrice() {
             }
         }
         var updatedPrice = Number(price) * Number($(this).val());
-        $('.unit-' + prodId + '').html(updatedPrice.toFixed(2));
+        $('.unit-' + prodId).html(updatedPrice.toFixed(2));
     });
     updateTotal();
 };
 
 function addProds() {
-    $('.add').on('click', function () {
+    $('.add').on('click', function() {
         var clicked = [];
         if ($('.cart-products').length === 0) {
             showFullCart();
@@ -87,17 +119,16 @@ function addProds() {
         for (var i in prods) {
             var index = prods[i];
             if (selectedProd == index.id) {
-                prodsToBeAdded.push(index);
                 clicked.push(index);
             }
-            $('.' + selectedProd + '').detach();
+            $('.' + selectedProd).remove();
         };
 
         function hideTooltipIfEmpty() {
             for (var i in clicked) {
                 var prod = clicked[i];
                 if (prod.description == null) {
-                    $('#' + prod.id + '').hide();
+                    $('#' + prod.id).hide();
                 }
             }
         };
@@ -113,12 +144,12 @@ function addProds() {
             hideTooltipIfEmpty();
         };
 
-        function showTooltip(id) {
-            $('.tooltip-icon').mouseenter(function () {
-                id = $(this).attr('id');
-                $('.tooltip-text.' + id + '').show();
+        function showTooltip() {
+            $('.tooltip-icon').mouseenter(function() {
+                var id = $(this).attr('id');
+                $('.tooltip-text.' + id).show();
             });
-            $('.tooltip-icon').mouseleave(function () {
+            $('.tooltip-icon').mouseleave(function() {
                 $('.tooltip-text').hide();
             });
         };
@@ -129,18 +160,33 @@ function addProds() {
     });
 };
 
-$(document).ready(function () {
+$(document).ready(function() {
     getProducts();
     showEmptyCart();
+
+    $('.add').initialize(function(){
+        addProds();
+    });
+
+    $('.remove').initialize(function(){
+        removeProds();
+        $(this).click(function(){
+            calculateTotal()
+        });
+    });
+    
+    $('.prod-in-cart').initialize(function(){
+        calculateTotal();
+    });
 });
 
-$(document).ajaxComplete(function () {
+$(document).ajaxComplete(function() {
     displayProds();
     addProds();
 });
 
 
-// TODO - remove product functionality
 // TODO - currency select & functionlity
 // TODO - currency parameter in url
 // TODO - refactor css using less
+// TODO - sort prods shown based on price
