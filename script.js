@@ -137,8 +137,7 @@ $(document).ajaxComplete(function() {
 });
 
 
-
-// TODO - update prices on qty change
 // TODO - remove product functionality
 // TODO - currency select & functionlity
 // TODO - currency parameter in url
+// TODO - refactor css using less
