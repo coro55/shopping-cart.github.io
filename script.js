@@ -48,13 +48,30 @@ function calculateTotal() {
         var price = Number($(this).text());
         total += price;
     });
-    $('.amount-total').html(parseFloat(total).toFixed(2));
+    $('.amount-total').html(total.toFixed(2));
+};
+
+function updateTotal(){
+    $('.form-control').blur(function(){
+       calculateTotal(); 
+    });
 };
 
 function updateQtyAndPrice() {
     $('.form-control').blur(function() {
         $('.form-control').trigger('change');
+        var prodId = $(this).attr('data-unit');
+        var price;
+        for (var i in prods) {
+        var prod = prods[i];
+            if (prod.id == prodId){
+                price = prod.price;
+            }
+        }
+        var updatedPrice = Number(price) * Number($(this).val());
+        $('.unit-'+prodId+'').html(updatedPrice.toFixed(2));
     });
+    updateTotal();
 };
 
 function addProds() {
