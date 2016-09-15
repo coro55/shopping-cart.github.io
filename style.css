@@ -155,3 +155,7 @@ input[type=number]{
     -webkit-appearance: textfield;
     -moz-appearance: textfield;
 }
+
+.currency-options{
+    padding-top: 20px;
+}

@@ -7,5 +7,5 @@ fullCart += "<div class='qty col-xs-2 col-sm-2 col-md-2 col-lg-2'><span class='p
 fullCart += "<div class='value vlaue-label col-xs-3 col-sm-3 col-md-3 col-lg-3'><span class='pull-right'>Value</span></div></div>";
 fullCart += "<div class='added-prods product-section col-xs-12 col-sm-12 col-md-12 col-lg-12'></div>";
 fullCart += "<div class='total total-amount col-xs-6 col-sm-4 col-md-5 col-lg-4 pull-right'>";
-fullCart += "<span class='label-amount'>Total: </span><span class='currency'>$</span><span class='amount-total'></span></div>";
+fullCart += "<span class='label-amount'>Total: </span><span class='currency'></span><span class='amount-total'></span></div>";
 fullCart += "<button class='add continue col-xs-12 col-sm-12 col-md-12 col-lg-12'>Continue</button></div>";
