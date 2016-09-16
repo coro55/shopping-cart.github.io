@@ -1,14 +1,27 @@
 var prods = [];
+var idAndPrice = {};
+var exchangeRates = {};
 
 function getProducts() {
     return $.ajax({
         url: "http://private-32dcc-products72.apiary-mock.com/product",
-        success: function (response) {
+        success: function(response) {
             for (var i in response) {
                 var item = response[i];
                 prods.push(item);
+                idAndPrice[item['id']] = item['price'];
                 i++;
             }
+        }
+    });
+};
+
+function getExchangeRate() {
+    return $.ajax({
+        url: 'http://api.fixer.io/latest?base=USD',
+        success: function(response) {
+            exchangeRates = response.rates;
+            exchangeRates.USD = 1;
         }
     });
 };
@@ -21,7 +34,7 @@ function displayProds() {
         product += "<div class='amount col-xs-5 col-sm-3 col-md-3 col-lg-3'>";
         product += "<span class='label-price'>Price: </span>";
         product += "<span class='currency'></span>";
-        product += "<span class='price default-" + prod['id'] + " default-price' data-qty-id=" + prod['id'] + ">" + prod["price"] + "</span>";
+        product += "<span class='price default-" + prod['id'] + " default-price' data-price-id=" + prod['id'] + ">" + prod["price"] + "</span>";
         product += "</div>";
         product += "<button class='add col-xs-4 col-sm-3 col-md-3 col-lg-3' data-id=" + prod['id'] + "><img src='res/shopping-cart.png' alt='cart'></img><span>Add to cart</span></button>";
         product += "</div>";
@@ -42,11 +55,11 @@ function showFullCart() {
 
 };
 
-$('remove').each(function () { $(this).click() })
+$('remove').each(function() { $(this).click() })
 
 function removeProds() {
     // $('.remove').each(function() {
-    $('.remove').on('click', function () {
+    $('.remove').on('click', function() {
         var id = $(this).attr('data-remove-id');
         $('.prod-in-cart.' + id).remove();
         if ($('.prod-in-cart').length === 0) {
@@ -60,7 +73,7 @@ function removeProds() {
                 product += "<div class='amount col-xs-5 col-sm-3 col-md-3 col-lg-3'>";
                 product += "<span class='label-price'>Price: </span>";
                 product += "<span class='currency'></span>";
-                product += "<span class='price'>" + prod["price"] + "</span>";
+                product += "<span class='price default-price default-" + prod["id"] + "' data-price-id=" + prod["id"] + ">" + prod["price"] + "</span>";
                 product += "</div>";
                 product += "<button class='add col-xs-4 col-sm-3 col-md-3 col-lg-3' data-id=" + prod['id'] + "><img src='res/shopping-cart.png' alt='cart'></img><span>Add to cart</span></button>";
                 product += "</div>";
@@ -74,7 +87,7 @@ function removeProds() {
 
 function calculateTotal() {
     var total = 0;
-    $('.unit-val').each(function () {
+    $('.unit-val').each(function() {
         var price = Number($(this).text());
         total += price;
     });
@@ -82,35 +95,44 @@ function calculateTotal() {
 };
 
 function updateTotal() {
-    $('.form-control').blur(function () {
+    $('.form-control').blur(function() {
         calculateTotal();
     });
 };
 
 function updateQtyAndPrice() {
-    $('.form-control').blur(function () {
-        $('.form-control').trigger('change');
+    $('.qty-input').blur(function() {
+        $('.qty-input').trigger('change');
+        $(this).val($(this).val().replace('.', ''));
         if ($(this).val() < 1) {
             $(this).val('1');
-        } else {
-            $(this).val($(this).val().replace('.', ''));
+        } else if($(this).val() > 50) {
+            $(this).val('50');
         }
         var prodId = $(this).attr('data-unit');
         var price;
+        var rate;
+        var updatedPrice
         for (var i in prods) {
             var prod = prods[i];
             if (prod.id == prodId) {
                 price = prod.price;
             }
         }
-        var updatedPrice = Number(price) * Number($(this).val());
+        if ($('.currency-select').val() != 'USD') {
+            var currency = $('.currency-select').val().toString();
+            rate = exchangeRates[currency];
+            updatedPrice = Number(rate) * Number(price) * Number($(this).val());
+        } else {
+            updatedPrice = Number(price) * Number($(this).val());
+        }
         $('.unit-' + prodId).html(updatedPrice.toFixed(2));
     });
     updateTotal();
 };
 
 function addProds() {
-    $('.add').on('click', function () {
+    $('.add').on('click', function() {
         var clicked = [];
         if ($('.cart-products').length === 0) {
             showFullCart();
@@ -136,20 +158,20 @@ function addProds() {
         for (var i in clicked) {
             var prodInCart = clicked[i];
             var cartProd = "<div class='prod-in-cart col-lg-12 col-md-12 col-sm-12 col-xs-12 " + prodInCart.id + " data-id=" + prodInCart.id + "'>";
-            cartProd += "<div class='prod-name col-lg-6 col-md-6 col-sm-6 col-xs-6'><span class='name'>" + prodInCart.name + "<img src='res/info.png' id=" + prodInCart.id + " class='tooltip-icon' alt='info'></img><div class='tooltip-text col-lg-2 col-md-2 col-sm-4 col-xs-4 " + prodInCart.id + "'>" + prodInCart.description + "</div></span></div>";
-            cartProd += "<div class='quantity col-lg-2 col-md-2 col-sm-2 col-xs-2'><input type='number' value='1' class='form-control' data-unit='" + prodInCart.id + "'></div>";
-            cartProd += "<div class='unit-price price col-lg-4 col-md-4 col-sm-4 col-xs-4'><span class='currency'></span><span class='unit-val price unit-" + prodInCart.id + "'>" + prodInCart.price + "</span>";
+            cartProd += "<div class='prod-name col-lg-6 col-md-5 col-sm-5 col-xs-5'><span class='name'>" + prodInCart.name + "<img src='res/info.png' id=" + prodInCart.id + " class='tooltip-icon' alt='info'></img><div class='tooltip-text col-lg-2 col-md-2 col-sm-4 col-xs-4 " + prodInCart.id + "'>" + prodInCart.description + "</div></span></div>";
+            cartProd += "<div class='quantity col-lg-2 col-md-3 col-sm-2 col-xs-2'><input type='number' value='1' class='form-control qty-input' data-unit='" + prodInCart.id + "'></div>";
+            cartProd += "<div class='unit-price price col-lg-4 col-md-4 col-sm-5 col-xs-5'><span class='currency'></span><span data-price-id=" + prodInCart.id + " class='unit-val default-price default-" + prodInCart.id + " price unit-" + prodInCart.id + "'>" + prodInCart.price + "</span>";
             cartProd += "<button class='remove glyphicon glyphicon-trash' data-remove-id='" + prodInCart.id + "'></button></div></div>";
             $('.added-prods').append(cartProd);
             hideTooltipIfEmpty();
         };
 
         function showTooltip() {
-            $('.tooltip-icon').mouseenter(function () {
+            $('.tooltip-icon').mouseenter(function() {
                 var id = $(this).attr('id');
                 $('.tooltip-text.' + id).show();
             });
-            $('.tooltip-icon').mouseleave(function () {
+            $('.tooltip-icon').mouseleave(function() {
                 $('.tooltip-text').hide();
             });
         };
@@ -163,7 +185,8 @@ function addProds() {
 var currencySymbols = {
     "USD": "$",
     "EUR": "€",
-    "GBP": "£"
+    "GBP": "£",
+    "TRY": "₺"
 };
 
 function changeCurrencySymbol() {
@@ -171,73 +194,82 @@ function changeCurrencySymbol() {
     $('.currency').html(currencySymbols[currencySymbol]);
 };
 
-var exchangeRates = {};
-
-function getExchangeRate() {
-    return $.ajax({
-        url: 'http://api.fixer.io/latest?base=USD',
-        success: function (response) {
-            exchangeRates = response.rates;
-            exchangeRates.USD = 1;
-        }
-    });
-}
-
-function calculatePricesInNewCurrency() {
-    $('.default-price').each(function () {
+function calculatePricesBasedOnCurrency() {
+    $('.default-price').map(function() {
+        var id = $(this).attr('data-price-id');
         var converted;
-        var price = Number($(this).text());
-        var id = $(this).attr('data-qty-id');
+        var price = idAndPrice[id];
         var currency;
-        $('.currency-select').change(function () {
-            currency = $(this).val();
-            var exchange = Number(exchangeRates['' + currency + '']); 
-            converted = price * exchange;
-            $('.default-' + id).html(converted.toFixed(2));         
-        });
+        currency = $('.currency-select').val();
+        var exchange = Number(exchangeRates[currency]);
+        converted = price * exchange;
+        $('.default-' + id).text(converted.toFixed(2));
     });
-}
+};
 
-$(document).ready(function () {
+function urlParam() {
+    var availableCurrencies = {};
+    var param = window.location.search.replace('?', '').toString();
+    $('.currency-option').map(function() {
+        var currency = $(this).text();
+        availableCurrencies[currency] = currency;
+    });
+    if (param.match('currency')) {
+        var currency = param.replace('currency=', '').toUpperCase();
+        if (currency == availableCurrencies[currency]) {
+            $('.currency-select').val(currency).trigger('change');
+        } else {
+            $('.currency-select').val('USD').trigger('change');
+        }
+    }
+};
+
+$(document).ready(function() {
+
+    urlParam();
     getProducts();
     showEmptyCart();
     getExchangeRate();
-    $('.add').initialize(function () {
+    $('.currency-select').change(function() {
+        calculatePricesBasedOnCurrency();
+    });
+
+    $('.add').initialize(function() {
         addProds();
     });
 
-    $('.remove').initialize(function () {
-        removeProds();
-        $(this).click(function () {
-            calculateTotal()
-        });
+    $('.default-price').initialize(function() {
+        calculatePricesBasedOnCurrency();
     });
 
-    $('.prod-in-cart').initialize(function () {
+    $('.remove').initialize(function() {
+        removeProds();
+        $(this).click(function() {
+            calculateTotal();
+        });
+
+    });
+
+    $('.prod-in-cart').initialize(function() {
         calculateTotal();
     });
 
-    $('.currency').initialize(function () {
+    $('.currency').initialize(function() {
         changeCurrencySymbol();
     });
-    $('.currency-options').click(function () {
+    $('.currency-options').click(function() {
         changeCurrencySymbol();
-        
+        $('.qty-input').blur();
     });
 });
 
-$(document).ajaxSuccess(function () {
+$(document).ajaxSuccess(function() {
     if ($('.prod').length === 0) {
         displayProds();
     }
     addProds();
-    calculatePricesInNewCurrency();
 });
 
 
-// TODO - currency select & functionlity - done only for prods not in cart - bug - not working after prod remove
-// TODO - currency parameter in url
 // TODO - refactor css using less
 // TODO - sort prods shown based on price
-
-
