@@ -12,7 +12,10 @@ function getProducts() {
                 idAndPrice[item['id']] = item['price'];
                 i++;
             }
-        }
+        },
+        error: function(){
+            alert('Products not available');
+        },
     });
 };
 
@@ -22,7 +25,12 @@ function getExchangeRate() {
         success: function(response) {
             exchangeRates = response.rates;
             exchangeRates.USD = 1;
-        }
+        },
+        error: function(){
+            $('.currency-select').val('USD').trigger('change');
+            exchangeRates.USD = 1;
+            $('.currency-select').attr('disabled', 1);
+        },
     });
 };
 
@@ -106,7 +114,7 @@ function updateQtyAndPrice() {
         $(this).val($(this).val().replace('.', ''));
         if ($(this).val() < 1) {
             $(this).val('1');
-        } else if($(this).val() > 50) {
+        } else if ($(this).val() > 50) {
             $(this).val('50');
         }
         var prodId = $(this).attr('data-unit');
@@ -119,13 +127,9 @@ function updateQtyAndPrice() {
                 price = prod.price;
             }
         }
-        if ($('.currency-select').val() != 'USD') {
-            var currency = $('.currency-select').val().toString();
-            rate = exchangeRates[currency];
-            updatedPrice = Number(rate) * Number(price) * Number($(this).val());
-        } else {
-            updatedPrice = Number(price) * Number($(this).val());
-        }
+        var currency = $('.currency-select').val().toString();
+        rate = exchangeRates[currency];
+        updatedPrice = Number(rate) * Number(price) * Number($(this).val());
         $('.unit-' + prodId).html(updatedPrice.toFixed(2));
     });
     updateTotal();
