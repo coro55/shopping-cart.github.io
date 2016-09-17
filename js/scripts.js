@@ -5,7 +5,7 @@ var exchangeRates = {};
 function getProducts() {
     return $.ajax({
         url: "http://private-32dcc-products72.apiary-mock.com/product",
-        success: function(response) {
+        success: function (response) {
             for (var i in response) {
                 var item = response[i];
                 prods.push(item);
@@ -13,7 +13,7 @@ function getProducts() {
                 i++;
             }
         },
-        error: function(){
+        error: function () {
             alert('Products not available');
         },
     });
@@ -22,11 +22,11 @@ function getProducts() {
 function getExchangeRate() {
     return $.ajax({
         url: 'http://api.fixer.io/latest?base=USD',
-        success: function(response) {
+        success: function (response) {
             exchangeRates = response.rates;
             exchangeRates.USD = 1;
         },
-        error: function(){
+        error: function () {
             $('.currency-select').val('USD').trigger('change');
             exchangeRates.USD = 1;
             $('.currency-select').attr('disabled', 1);
@@ -65,7 +65,7 @@ function showFullCart() {
 
 function removeProds() {
     // $('.remove').each(function() {
-    $('.remove').on('click', function() {
+    $('.remove').on('click', function () {
         var id = $(this).attr('data-remove-id');
         $('.prod-in-cart.' + id).remove();
         if ($('.prod-in-cart').length === 0) {
@@ -93,7 +93,7 @@ function removeProds() {
 
 function calculateTotal() {
     var total = 0;
-    $('.unit-val').each(function() {
+    $('.unit-val').each(function () {
         var price = Number($(this).text());
         total += price;
     });
@@ -101,13 +101,13 @@ function calculateTotal() {
 };
 
 function updateTotal() {
-    $('.form-control').blur(function() {
+    $('.form-control').blur(function () {
         calculateTotal();
     });
 };
 
 function updateQtyAndPrice() {
-    $('.qty-input').blur(function() {
+    $('.qty-input').blur(function () {
         $('.qty-input').trigger('change');
         $(this).val($(this).val().replace('.', ''));
         if ($(this).val() < 1) {
@@ -134,7 +134,7 @@ function updateQtyAndPrice() {
 };
 
 function addProds() {
-    $('.add').on('click', function() {
+    $('.add').on('click', function () {
         var clicked = [];
         if ($('.cart-products').length === 0) {
             showFullCart();
@@ -169,11 +169,11 @@ function addProds() {
         };
 
         function showTooltip() {
-            $('.tooltip-icon').mouseenter(function() {
+            $('.tooltip-icon').mouseenter(function () {
                 var id = $(this).attr('id');
                 $('.tooltip-text.' + id).show();
             });
-            $('.tooltip-icon').mouseleave(function() {
+            $('.tooltip-icon').mouseleave(function () {
                 $('.tooltip-text').hide();
             });
         };
@@ -197,7 +197,7 @@ function changeCurrencySymbol() {
 };
 
 function calculatePricesBasedOnCurrency() {
-    $('.default-price').map(function() {
+    $('.default-price').map(function () {
         var id = $(this).attr('data-price-id');
         var converted;
         var price = idAndPrice[id];
@@ -212,7 +212,7 @@ function calculatePricesBasedOnCurrency() {
 function urlParam() {
     var availableCurrencies = {};
     var param = window.location.search.replace('?', '').toString();
-    $('.currency-option').map(function() {
+    $('.currency-option').map(function () {
         var currency = $(this).text();
         availableCurrencies[currency] = currency;
     });
@@ -226,46 +226,49 @@ function urlParam() {
     }
 };
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     urlParam();
     getProducts();
     showEmptyCart();
     getExchangeRate();
-    $('.currency-select').change(function() {
+    $('.currency-select').change(function () {
         calculatePricesBasedOnCurrency();
     });
 
-    $('.add').initialize(function() {
+    $('.add').initialize(function () {
         addProds();
     });
 
-    $('.default-price').initialize(function() {
+    $('.default-price').initialize(function () {
         calculatePricesBasedOnCurrency();
     });
 
-    $('.remove').initialize(function() {
+    $('.remove').initialize(function () {
         removeProds();
-        $(this).click(function() {
+        $(this).click(function () {
             calculateTotal();
         });
 
     });
 
-    $('.prod-in-cart').initialize(function() {
+    $('.prod-in-cart').initialize(function () {
         calculateTotal();
     });
 
-    $('.currency').initialize(function() {
+    $('.currency').initialize(function () {
         changeCurrencySymbol();
     });
-    $('.currency-options').click(function() {
+    $('.currency-options').click(function () {
         changeCurrencySymbol();
+        $('.qty-input').blur();
+    });
+    $('.qty-input').initialize(function () {
         $('.qty-input').blur();
     });
 });
 
-$(document).ajaxSuccess(function() {
+$(document).ajaxSuccess(function () {
     if ($('.prod').length === 0) {
         displayProds();
     }
