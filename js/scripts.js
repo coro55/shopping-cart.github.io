@@ -274,6 +274,8 @@ $(document).ready(function () {
     });
     $('.sort-price').initialize(function(){
         sortProds();
+        $('.currency-select').change();
+        $('.qty-input').blur();
     });
 });
 
