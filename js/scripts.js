@@ -63,8 +63,6 @@ function showFullCart() {
 
 };
 
-$('remove').each(function() { $(this).click() })
-
 function removeProds() {
     // $('.remove').each(function() {
     $('.remove').on('click', function() {
