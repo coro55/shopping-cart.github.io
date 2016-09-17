@@ -199,8 +199,7 @@ function sortProds() {
 var currencySymbols = {
     "USD": "$",
     "EUR": "€",
-    "GBP": "£",
-    "TRY": "₺"
+    "GBP": "£"
 };
 
 function changeCurrencySymbol() {
@@ -274,7 +273,6 @@ $(document).ready(function () {
     });
     $('.sort-price').initialize(function(){
         sortProds();
-        $('.currency-select').change();
         $('.qty-input').blur();
     });
 });
