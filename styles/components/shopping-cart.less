@@ -1,0 +1,19 @@
+@import 'cart-table';
+@import 'cart-prod-row';
+@import 'cart-cta';
+
+.cart{
+    min-height: @main-min-height;
+    border: 2px solid #8C8C8C;
+    border-radius: @main-b-radius;
+    margin-top: @main-margin;
+    background-color: @cart-bg;
+    .cart-products{
+        font-size: @main-font-size;
+        padding-left: @no-padding;
+    }
+    .no-prods{
+        font-size: @main-font-size;
+        padding-bottom: @main-padding * 4 + 20px;
+    }
+}

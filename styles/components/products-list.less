@@ -1,0 +1,28 @@
+.prod{
+    background-color: @prod-bg;
+    margin: @main-margin 0 @main-margin 0;
+    font-size: @main-font-size + 5px;
+    border-radius: @main-b-radius;
+    div{
+        display: @main-display;
+        padding: @main-padding - 30px 0 @main-padding - 30px 0;
+    }
+    .currency, .price{
+        color: @price-color;
+    }
+    .add-btn{
+        font-size: @main-font-size;
+        background-color: @cta-color;
+        color: @main-color;
+        margin: @main-margin 0 @main-margin 0;
+        padding: @main-padding - 40px 0 @main-padding - 40px 0;
+        border-radius: @main-b-radius;
+        border: none;
+        img{
+            padding-right: @main-padding - 40px;
+        }
+        &:hover{
+            background-color: @cta-color-hover;
+        }
+    }
+}
