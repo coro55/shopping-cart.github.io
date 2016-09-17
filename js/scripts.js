@@ -147,7 +147,6 @@ function addProds() {
             }
             $('.' + selectedProd).remove();
         };
-
         function hideTooltipIfEmpty() {
             for (var i in clicked) {
                 var prod = clicked[i];
@@ -156,7 +155,6 @@ function addProds() {
                 }
             }
         };
-
         for (var i in clicked) {
             var prodInCart = clicked[i];
             var cartProd = "<div class='prod-in-cart col-lg-12 col-md-12 col-sm-12 col-xs-12 " + prodInCart.id + " data-id=" + prodInCart.id + "'>";
@@ -167,7 +165,6 @@ function addProds() {
             $('.added-prods').append(cartProd);
             hideTooltipIfEmpty();
         };
-
         function showTooltip() {
             $('.tooltip-icon').mouseenter(function () {
                 var id = $(this).attr('id');
@@ -183,6 +180,21 @@ function addProds() {
         updateQtyAndPrice();
     });
 };
+
+function sortProds() {
+    var arr = [];
+    $('.sort-price').each(function () {
+        arr.push([$(this).attr('data-price-id'), $(this).text()])
+    });
+    arr.sort(function (a, b) {
+        return b[1] > a[1];
+    });
+    for (var i = 0; i < arr.length; i++) {
+        var prod = arr[i];
+        var rowId = prod[0];
+        $('.' + rowId).insertAfter('.add-to-cart > :last-child');
+    }
+}
 
 var currencySymbols = {
     "USD": "$",
@@ -227,7 +239,6 @@ function urlParam() {
 };
 
 $(document).ready(function () {
-
     urlParam();
     getProducts();
     showEmptyCart();
@@ -235,15 +246,12 @@ $(document).ready(function () {
     $('.currency-select').change(function () {
         calculatePricesBasedOnCurrency();
     });
-
     $('.add').initialize(function () {
         addProds();
     });
-
     $('.default-price').initialize(function () {
         calculatePricesBasedOnCurrency();
     });
-
     $('.remove').initialize(function () {
         removeProds();
         $(this).click(function () {
@@ -251,11 +259,9 @@ $(document).ready(function () {
         });
 
     });
-
     $('.prod-in-cart').initialize(function () {
         calculateTotal();
     });
-
     $('.currency').initialize(function () {
         changeCurrencySymbol();
     });
@@ -266,6 +272,9 @@ $(document).ready(function () {
     $('.qty-input').initialize(function () {
         $('.qty-input').blur();
     });
+    $('.sort-price').initialize(function(){
+        sortProds();
+    });
 });
 
 $(document).ajaxSuccess(function () {
@@ -273,8 +282,5 @@ $(document).ajaxSuccess(function () {
         displayProds();
     }
     addProds();
+    sortProds();
 });
-
-
-// TODO - refactor css using less
-// TODO - sort prods shown based on price
