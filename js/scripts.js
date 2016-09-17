@@ -42,7 +42,7 @@ function displayProds() {
         product += "<div class='amount col-xs-5 col-sm-3 col-md-3 col-lg-3'>";
         product += "<span class='label-price'>Price: </span>";
         product += "<span class='currency'></span>";
-        product += "<span class='price default-" + prod['id'] + " default-price' data-price-id=" + prod['id'] + ">" + prod["price"] + "</span>";
+        product += "<span class='price sort-price default-" + prod['id'] + " default-price' data-price-id=" + prod['id'] + ">" + prod["price"] + "</span>";
         product += "</div>";
         product += "<button class='add add-btn col-xs-4 col-sm-3 col-md-3 col-lg-3' data-id=" + prod['id'] + "><img src='resources/shopping-cart.png' alt='cart'></img><span>Add to cart</span></button>";
         product += "</div>";
@@ -79,7 +79,7 @@ function removeProds() {
                 product += "<div class='amount col-xs-5 col-sm-3 col-md-3 col-lg-3'>";
                 product += "<span class='label-price'>Price: </span>";
                 product += "<span class='currency'></span>";
-                product += "<span class='price default-price default-" + prod["id"] + "' data-price-id=" + prod["id"] + ">" + prod["price"] + "</span>";
+                product += "<span class='price sort-price default-price default-" + prod["id"] + "' data-price-id=" + prod["id"] + ">" + prod["price"] + "</span>";
                 product += "</div>";
                 product += "<button class='add add-btn col-xs-4 col-sm-3 col-md-3 col-lg-3' data-id=" + prod['id'] + "><img src='resources/shopping-cart.png' alt='cart'></img><span>Add to cart</span></button>";
                 product += "</div>";
