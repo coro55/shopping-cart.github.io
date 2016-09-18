@@ -64,7 +64,6 @@ function showFullCart() {
 };
 
 function removeProds() {
-    // $('.remove').each(function() {
     $('.remove').on('click', function () {
         var id = $(this).attr('data-remove-id');
         $('.prod-in-cart.' + id).remove();
@@ -87,8 +86,6 @@ function removeProds() {
             }
         }
     });
-
-    // });
 };
 
 function calculateTotal() {
@@ -101,7 +98,7 @@ function calculateTotal() {
 };
 
 function updateTotal() {
-    $('.form-control').blur(function () {
+    $('.qty-input').blur(function () {
         calculateTotal();
     });
 };
@@ -133,6 +130,25 @@ function updateQtyAndPrice() {
     updateTotal();
 };
 
+function hideTooltipIfEmpty(clicked) {
+    for (var i in clicked) {
+        prod = clicked[i];
+        if (prod.description == null) {
+            $('#' + prod.id).hide();
+        }
+    }
+};
+
+function showTooltip(id) {
+    $('.tooltip-icon').mouseenter(function () {
+        id = $(this).attr('id');
+        $('.tooltip-text.' + id).show();
+    });
+    $('.tooltip-icon').mouseleave(function () {
+        $('.tooltip-text').hide();
+    });
+};
+
 function addProds() {
     $('.add').on('click', function () {
         var clicked = [];
@@ -147,14 +163,6 @@ function addProds() {
             }
             $('.' + selectedProd).remove();
         };
-        function hideTooltipIfEmpty() {
-            for (var i in clicked) {
-                var prod = clicked[i];
-                if (prod.description == null) {
-                    $('#' + prod.id).hide();
-                }
-            }
-        };
         for (var i in clicked) {
             var prodInCart = clicked[i];
             var cartProd = "<div class='prod-in-cart col-lg-12 col-md-12 col-sm-12 col-xs-12 " + prodInCart.id + " data-id=" + prodInCart.id + "'>";
@@ -163,16 +171,7 @@ function addProds() {
             cartProd += "<div class='unit-price price col-lg-4 col-md-4 col-sm-5 col-xs-5'><span class='currency'></span><span data-price-id=" + prodInCart.id + " class='unit-val default-price default-" + prodInCart.id + " price unit-" + prodInCart.id + "'>" + prodInCart.price + "</span>";
             cartProd += "<button class='remove glyphicon glyphicon-trash' data-remove-id='" + prodInCart.id + "'></button></div></div>";
             $('.added-prods').append(cartProd);
-            hideTooltipIfEmpty();
-        };
-        function showTooltip() {
-            $('.tooltip-icon').mouseenter(function () {
-                var id = $(this).attr('id');
-                $('.tooltip-text.' + id).show();
-            });
-            $('.tooltip-icon').mouseleave(function () {
-                $('.tooltip-text').hide();
-            });
+            hideTooltipIfEmpty(clicked);
         };
         clicked = [];
         calculateTotal();
@@ -242,39 +241,15 @@ $(document).ready(function () {
     getProducts();
     showEmptyCart();
     getExchangeRate();
-    $('.currency-select').change(function () {
-        calculatePricesBasedOnCurrency();
-    });
-    $('.add').initialize(function () {
-        addProds();
-    });
-    $('.default-price').initialize(function () {
-        calculatePricesBasedOnCurrency();
-    });
-    $('.remove').initialize(function () {
-        removeProds();
-        $(this).click(function () {
-            calculateTotal();
-        });
-
-    });
-    $('.prod-in-cart').initialize(function () {
-        calculateTotal();
-    });
-    $('.currency').initialize(function () {
-        changeCurrencySymbol();
-    });
-    $('.currency-options').click(function () {
-        changeCurrencySymbol();
-        $('.qty-input').blur();
-    });
-    $('.qty-input').initialize(function () {
-        $('.qty-input').blur();
-    });
-    $('.sort-price').initialize(function(){
-        sortProds();
-        $('.qty-input').blur();
-    });
+    $('.currency-select').change(function () {calculatePricesBasedOnCurrency();});
+    $('.add').initialize(function () {addProds();});
+    $('.default-price').initialize(function () {calculatePricesBasedOnCurrency();});
+    $('.remove').initialize(function () {removeProds();$(this).click(function () {calculateTotal();});});
+    $('.prod-in-cart').initialize(function () {calculateTotal();});
+    $('.currency').initialize(function () {changeCurrencySymbol();});
+    $('.currency-options').click(function () {changeCurrencySymbol();$('.qty-input').blur();});
+    $('.qty-input').initialize(function () {$('.qty-input').blur();});
+    $('.sort-price').initialize(function(){sortProds();$('.qty-input').blur();});
 });
 
 $(document).ajaxSuccess(function () {
