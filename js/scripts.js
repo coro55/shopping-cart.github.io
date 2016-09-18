@@ -6,6 +6,7 @@ function getProducts() {
     return $.ajax({
         url: "http://private-32dcc-products72.apiary-mock.com/product",
         success: function (response) {
+            $('.loader').hide();
             for (var i in response) {
                 var item = response[i];
                 prods.push(item);
