@@ -251,4 +251,6 @@ $(document).ready(function () {
 
 $(document).ajaxSuccess(function () {
     if ($('.prod').length === 0) {displayProds();}
+    $('.currency-select').trigger('change');
+    sortProds();    
 });
