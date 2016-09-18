@@ -1,7 +1,7 @@
 var prods = [];
 var idAndPrice = {};
 var exchangeRates = {};
-
+//@return - the list of products to be displayed in cart
 function getProducts() {
     return $.ajax({
         url: "http://private-32dcc-products72.apiary-mock.com/product",
@@ -18,7 +18,7 @@ function getProducts() {
         },
     });
 };
-
+//@return - the exchange rates to be used
 function getExchangeRate() {
     return $.ajax({
         url: 'http://api.fixer.io/latest?base=USD',
@@ -33,7 +33,7 @@ function getExchangeRate() {
         },
     });
 };
-
+// iterate through prods, create html elem and append it to the prods list
 function displayProds() {
     for (var i in prods) {
         var prod = prods[i];
@@ -49,19 +49,19 @@ function displayProds() {
         $(".add-to-cart").append(product);
     }
 };
-
+// displays the empty cart section - template created in data.js
 function showEmptyCart() {
     $('.no-prods').remove();
     $('.full-cart').remove();
     $('.cart').append(emptyCart);
 };
-
+// displays the full cart sections - template created in data.js
 function showFullCart() {
     $('.full-cart').remove();
     $('.no-prods').remove();
     $('.cart').append(fullCart);
 };
-
+// removes the prod in cart on button click and appends it back in the product list
 function removeProds() {
     $('.remove').on('click', function () {
         var id = $(this).attr('data-remove-id');
@@ -86,49 +86,50 @@ function removeProds() {
         }
     });
 };
-
+// on qty-input blur calculates the total price and replaces the current total with the new one
 function calculateTotal() {
-    var total = 0;
-    $('.unit-val').each(function () {
-        var price = Number($(this).text());
-        total += price;
-    });
-    $('.amount-total').html(total.toFixed(2));
-};
-
-function updateTotal() {
     $('.qty-input').blur(function () {
-        calculateTotal();
+        var total = 0;
+        $('.unit-val').each(function () {
+            var price = Number($(this).text());
+            total += price;
+        });
+        $('.amount-total').html(total.toFixed(2));
     });
 };
-
+// sets the qty min val to 1 and max val to 50; removes '.' from qty val 
+function setMinMaxQty(input){
+    input.val(input.val().replace('.', ''));
+    if (input.val() < 1) {
+        input.val('1');
+    } else if (input.val() > 50) {
+        input.val('50');
+    }
+};
+// on qty input blur it updates the price for each prod in cart, calculated in the selected currency
 function updateQtyAndPrice() {
     $('.qty-input').blur(function () {
         $('.qty-input').trigger('change');
-        $(this).val($(this).val().replace('.', ''));
-        if ($(this).val() < 1) {
-            $(this).val('1');
-        } else if ($(this).val() > 50) {
-            $(this).val('50');
-        }
+        var input = $(this);
         var prodId = $(this).attr('data-unit');
+        var currency = $('.currency-select').val().toString();
         var price;
         var rate;
-        var updatedPrice
+        var updatedPrice;
+        setMinMaxQty(input);
         for (var i in prods) {
             var prod = prods[i];
             if (prod.id == prodId) {
                 price = prod.price;
             }
         }
-        var currency = $('.currency-select').val().toString();
         rate = exchangeRates[currency];
-        updatedPrice = Number(rate) * Number(price) * Number($(this).val());
+        updatedPrice = Number(rate) * Number(price) * Number(input.val());
         $('.unit-' + prodId).html(updatedPrice.toFixed(2));
     });
-    updateTotal();
+    calculateTotal();
 };
-
+// checks if the tooltip for each prod in cart has text; if not, it hides it;
 function hideTooltipIfEmpty(thisProd) {
     for (var i in thisProd) {
         prod = thisProd[i];
@@ -137,7 +138,7 @@ function hideTooltipIfEmpty(thisProd) {
         }
     }
 };
-
+// displays tooltip text on hover on the tooltip icon
 function showTooltip(id) {
     $('.tooltip-icon').mouseenter(function () {
         id = $(this).attr('id');
@@ -147,7 +148,7 @@ function showTooltip(id) {
         $('.tooltip-text').hide();
     });
 };
-
+// on first prod added it displays the full cart; gets the selected prod's id, iterates through prods var and adds to thisProd the selected prod; adds thisProd to cart'
 function addProds() {
     $('.add').on('click', function () {
         var thisProd = [];
@@ -178,7 +179,7 @@ function addProds() {
         updateQtyAndPrice();
     });
 };
-
+// creates an array containing id and price for each prod displayed in the list, sorts it and re-arranges the html prop elem in desc order based on price
 function sortProds() {
     var arr = [];
     $('.sort-price').each(function () {
@@ -193,14 +194,14 @@ function sortProds() {
         $('.' + rowId).insertAfter('.add-to-cart > :last-child');
     }
 }
-
+// object containing symbols for each currency available in cart; if other currencies are needed, add here and in currency options list in index html
 var currencySymbols = {"USD": "$","EUR": "€","GBP": "£"};
-
+// changes the currency symbol displayed based on the currency select val
 function changeCurrencySymbol() {
     var currencySymbol = $('.currency-select').val();
     $('.currency').html(currencySymbols[currencySymbol]);
 };
-
+// displayes prices in cart based on the currency exchange rate; overwritten by updateQtyAndPrice for prods in cart
 function calculatePricesBasedOnCurrency() {
     $('.default-price').map(function () {
         var id = $(this).attr('data-price-id');
@@ -213,7 +214,7 @@ function calculatePricesBasedOnCurrency() {
         $('.default-' + id).text(converted.toFixed(2));
     });
 };
-
+// searches for currency=*** param in url and sets the currency select value to param value - works only if currency=*** is present in url and nothing else
 function urlParam() {
     var availableCurrencies = {};
     var param = window.location.search.replace('?', '').toString();
