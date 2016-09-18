@@ -60,7 +60,6 @@ function showFullCart() {
     $('.full-cart').remove();
     $('.no-prods').remove();
     $('.cart').append(fullCart);
-
 };
 
 function removeProds() {
@@ -195,11 +194,7 @@ function sortProds() {
     }
 }
 
-var currencySymbols = {
-    "USD": "$",
-    "EUR": "€",
-    "GBP": "£"
-};
+var currencySymbols = {"USD": "$","EUR": "€","GBP": "£"};
 
 function changeCurrencySymbol() {
     var currencySymbol = $('.currency-select').val();
@@ -253,9 +248,5 @@ $(document).ready(function () {
 });
 
 $(document).ajaxSuccess(function () {
-    if ($('.prod').length === 0) {
-        displayProds();
-    }
-    addProds();
-    sortProds();
+    if ($('.prod').length === 0) {displayProds();}
 });
