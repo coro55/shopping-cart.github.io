@@ -130,9 +130,9 @@ function updateQtyAndPrice() {
     updateTotal();
 };
 
-function hideTooltipIfEmpty(clicked) {
-    for (var i in clicked) {
-        prod = clicked[i];
+function hideTooltipIfEmpty(thisProd) {
+    for (var i in thisProd) {
+        prod = thisProd[i];
         if (prod.description == null) {
             $('#' + prod.id).hide();
         }
@@ -151,7 +151,7 @@ function showTooltip(id) {
 
 function addProds() {
     $('.add').on('click', function () {
-        var clicked = [];
+        var thisProd = [];
         if ($('.cart-products').length === 0) {
             showFullCart();
         };
@@ -159,21 +159,21 @@ function addProds() {
         for (var i in prods) {
             var index = prods[i];
             if (selectedProd == index.id) {
-                clicked.push(index);
+                thisProd.push(index);
             }
             $('.' + selectedProd).remove();
         };
-        for (var i in clicked) {
-            var prodInCart = clicked[i];
+        for (var i in thisProd) {
+            var prodInCart = thisProd[i];
             var cartProd = "<div class='prod-in-cart col-lg-12 col-md-12 col-sm-12 col-xs-12 " + prodInCart.id + " data-id=" + prodInCart.id + "'>";
             cartProd += "<div class='prod-name col-lg-6 col-md-5 col-sm-5 col-xs-5'><span class='name'>" + prodInCart.name + "<img src='resources/info.png' id=" + prodInCart.id + " class='tooltip-icon' alt='info'></img><div class='tooltip-text col-lg-2 col-md-2 col-sm-4 col-xs-4 " + prodInCart.id + "'>" + prodInCart.description + "</div></span></div>";
             cartProd += "<div class='quantity col-lg-2 col-md-3 col-sm-2 col-xs-2'><input type='number' value='1' class='form-control qty-input' data-unit='" + prodInCart.id + "'></div>";
             cartProd += "<div class='unit-price price col-lg-4 col-md-4 col-sm-5 col-xs-5'><span class='currency'></span><span data-price-id=" + prodInCart.id + " class='unit-val default-price default-" + prodInCart.id + " price unit-" + prodInCart.id + "'>" + prodInCart.price + "</span>";
             cartProd += "<button class='remove glyphicon glyphicon-trash' data-remove-id='" + prodInCart.id + "'></button></div></div>";
             $('.added-prods').append(cartProd);
-            hideTooltipIfEmpty(clicked);
+            hideTooltipIfEmpty(thisProd);
         };
-        clicked = [];
+        thisProd = [];
         calculateTotal();
         showTooltip();
         updateQtyAndPrice();
