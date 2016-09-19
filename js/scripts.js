@@ -184,7 +184,7 @@ function addProds() {
 function sortProds() {
     var arr = [];
     $('.sort-price').each(function () {
-        arr.push([$(this).attr('data-price-id'), $(this).text()])
+        arr.push([$(this).attr('data-price-id'), $(this).text()]);
     });
     arr.sort(function (a, b) {
         return b[1] > a[1];
