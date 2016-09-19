@@ -18,7 +18,7 @@ function getProducts() {
             alert('Products not available');
         },
     });
-};
+}
 //@return - the exchange rates to be used
 function getExchangeRate() {
     return $.ajax({
@@ -33,7 +33,7 @@ function getExchangeRate() {
             $('.currency-select').attr('disabled', 1);
         },
     });
-};
+}
 // iterate through prods, create html elem and append it to the prods list
 function displayProds() {
     for (var i in prods) {
@@ -49,19 +49,19 @@ function displayProds() {
         product += "</div>";
         $(".add-to-cart").append(product);
     }
-};
+}
 // displays the empty cart section - template created in data.js
 function showEmptyCart() {
     $('.no-prods').remove();
     $('.full-cart').remove();
     $('.cart').append(emptyCart);
-};
+}
 // displays the full cart sections - template created in data.js
 function showFullCart() {
     $('.full-cart').remove();
     $('.no-prods').remove();
     $('.cart').append(fullCart);
-};
+}
 // removes the prod in cart on button click and appends it back in the product list
 function removeProds() {
     $('.remove').on('click', function () {
@@ -72,7 +72,7 @@ function removeProds() {
         }
         for (var i in prods) {
             var prod = prods[i];
-            if (id == prod['id'] && $('.prod.' + prod['id']).length == 0) {
+            if (id == prod['id'] && $('.prod.' + prod['id']).length === 0) {
                 var product = "<div class='prod col-xs-12 col-sm-12 col-md-12 col-lg-12 " + prod['id'] + "'>";
                 product += "<div class='prod-name col-xs-3 col-sm-6 col-md-6 col-lg-6'>" + prod['name'] + "</div>";
                 product += "<div class='amount col-xs-5 col-sm-3 col-md-3 col-lg-3'>";
@@ -86,7 +86,7 @@ function removeProds() {
             }
         }
     });
-};
+}
 // on qty-input blur calculates the total price and replaces the current total with the new one
 function calculateTotal() {
     $('.qty-input').blur(function () {
@@ -97,7 +97,7 @@ function calculateTotal() {
         });
         $('.amount-total').html(total.toFixed(2));
     });
-};
+}
 // sets the qty min val to 1 and max val to 50; removes '.' from qty val 
 function setMinMaxQty(input){
     input.val(input.val().replace('.', ''));
@@ -106,7 +106,7 @@ function setMinMaxQty(input){
     } else if (input.val() > 50) {
         input.val('50');
     }
-};
+}
 // on qty input blur it updates the price for each prod in cart, calculated in the selected currency
 function updateQtyAndPrice() {
     $('.qty-input').blur(function () {
@@ -129,7 +129,7 @@ function updateQtyAndPrice() {
         $('.unit-' + prodId).html(updatedPrice.toFixed(2));
     });
     calculateTotal();
-};
+}
 // checks if the tooltip for each prod in cart has text; if not, it hides it;
 function hideTooltipIfEmpty(thisProd) {
     for (var i in thisProd) {
@@ -138,7 +138,7 @@ function hideTooltipIfEmpty(thisProd) {
             $('#' + prod.id).hide();
         }
     }
-};
+}
 // displays tooltip text on hover on the tooltip icon
 function showTooltip(id) {
     $('.tooltip-icon').mouseenter(function () {
@@ -148,14 +148,14 @@ function showTooltip(id) {
     $('.tooltip-icon').mouseleave(function () {
         $('.tooltip-text').hide();
     });
-};
+}
 // on first prod added it displays the full cart; gets the selected prod's id, iterates through prods var and adds to thisProd the selected prod; adds thisProd to cart'
 function addProds() {
     $('.add').on('click', function () {
         var thisProd = [];
         if ($('.cart-products').length === 0) {
             showFullCart();
-        };
+        }
         var selectedProd = $(this).attr('data-id');
         for (var i in prods) {
             var index = prods[i];
@@ -163,9 +163,9 @@ function addProds() {
                 thisProd.push(index);
             }
             $('.' + selectedProd).remove();
-        };
-        for (var i in thisProd) {
-            var prodInCart = thisProd[i];
+        }
+        for (var j in thisProd) {
+            var prodInCart = thisProd[j];
             var cartProd = "<div class='prod-in-cart col-lg-12 col-md-12 col-sm-12 col-xs-12 " + prodInCart.id + " data-id=" + prodInCart.id + "'>";
             cartProd += "<div class='prod-name col-lg-6 col-md-5 col-sm-5 col-xs-5'><span class='name'>" + prodInCart.name + "<img src='resources/info.png' id=" + prodInCart.id + " class='tooltip-icon' alt='info'></img><div class='tooltip-text col-lg-2 col-md-2 col-sm-4 col-xs-4 " + prodInCart.id + "'>" + prodInCart.description + "</div></span></div>";
             cartProd += "<div class='quantity col-lg-2 col-md-3 col-sm-2 col-xs-2'><input type='number' value='1' class='form-control qty-input' data-unit='" + prodInCart.id + "'></div>";
@@ -173,13 +173,13 @@ function addProds() {
             cartProd += "<button class='remove glyphicon glyphicon-trash' data-remove-id='" + prodInCart.id + "'></button></div></div>";
             $('.added-prods').append(cartProd);
             hideTooltipIfEmpty(thisProd);
-        };
+        }
         thisProd = [];
         calculateTotal();
         showTooltip();
         updateQtyAndPrice();
     });
-};
+}
 // creates an array containing id and price for each prod displayed in the list, sorts it and re-arranges the html prop elem in desc order based on price
 function sortProds() {
     var arr = [];
@@ -201,7 +201,7 @@ var currencySymbols = {"USD": "$","EUR": "€","GBP": "£"};
 function changeCurrencySymbol() {
     var currencySymbol = $('.currency-select').val();
     $('.currency').html(currencySymbols[currencySymbol]);
-};
+}
 // displayes prices in cart based on the currency exchange rate; overwritten by updateQtyAndPrice for prods in cart
 function calculatePricesBasedOnCurrency() {
     $('.default-price').map(function () {
@@ -214,7 +214,7 @@ function calculatePricesBasedOnCurrency() {
         converted = price * exchange;
         $('.default-' + id).text(converted.toFixed(2));
     });
-};
+}
 // searches for currency=*** param in url and sets the currency select value to param value - works only if currency=*** is present in url and nothing else
 function urlParam() {
     var availableCurrencies = {};
@@ -231,7 +231,7 @@ function urlParam() {
             $('.currency-select').val('USD').trigger('change');
         }
     }
-};
+}
 
 $(document).ready(function () {
     urlParam();
