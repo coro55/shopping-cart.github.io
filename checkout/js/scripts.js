@@ -233,17 +233,15 @@ function urlParam() {
     }
 }
 
-function pushProdsToLocal() {
-    $('.prod-in-cart').map(function () {
-        var prod = [];
-        var id = $('.qty-input', this).attr('data-unit');
-        var name = $('.prod-name-cart', this).text();
-        var qty = $('.qty-input', this).val();
-        var price = $('.currency', this).text() + $('.unit-val', this).text();
-        prod.push(name, qty, price);
-        localStorage[id] = JSON.stringify(prod);
-    })
-}
+// function pushProdsToLocal() {
+//         var prod = [];
+//         var id = $('.qty-input', this).attr('data-unit');
+//         var name = $('.prod-name-cart', this).text();
+//         var qty = $('.qty-input', this).val();
+//         var price = $('.currency', this).text() + $('.unit-val', this).text();
+//         prod.push(name, qty, price);
+//         localStorage[id] = JSON.stringify(prod);
+// }
 
 $(document).ready(function () {
     urlParam();
@@ -251,11 +249,6 @@ $(document).ready(function () {
     showEmptyCart();
     getExchangeRate();
     $('.currency-select').change(function () { calculatePricesBasedOnCurrency(); });
-    $('.continue').initialize(function () {
-         $(this).mousedown(function(){
-              pushProdsToLocal();
-            }); 
-        });
     $('.add').initialize(function () { addProds(); });
     $('.default-price').initialize(function () { calculatePricesBasedOnCurrency(); });
     $('.remove').initialize(function () { removeProds(); $(this).click(function () { calculateTotal(); }); });
