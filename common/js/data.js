@@ -10,4 +10,3 @@ fullCart += "<div class='total total-amount col-xs-6 col-sm-4 col-md-5 col-lg-4 
 fullCart += "<span class='label-amount'>Total: </span><span class='currency'></span><span class='amount-total price'></span></div>";
 fullCart += "<a href='../billing/billing.html'><button class='add continue col-xs-12 col-sm-12 col-md-12 col-lg-12'>Continue</button></a></div>";
 
-var prodsForVerify = [];
