@@ -45,7 +45,7 @@ function displayProds() {
         product += "<span class='currency'></span>";
         product += "<span class='price sort-price default-" + prod['id'] + " default-price' data-price-id=" + prod['id'] + ">" + prod["price"] + "</span>";
         product += "</div>";
-        product += "<button class='add add-btn col-xs-4 col-sm-3 col-md-3 col-lg-3' data-id=" + prod['id'] + "><img src='resources/shopping-cart.png' alt='cart'></img><span>Add to cart</span></button>";
+        product += "<button class='add add-btn col-xs-4 col-sm-3 col-md-3 col-lg-3' data-id=" + prod['id'] + "><img src='../resources/shopping-cart.png' alt='cart'></img><span>Add to cart</span></button>";
         product += "</div>";
         $(".add-to-cart").append(product);
     }
