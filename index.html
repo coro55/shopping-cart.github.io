@@ -1,10 +1,44 @@
-<!doctype HTML>
-    <head>
-        <script language="javascript" type="text/javascript">
-            window.location.href = '/checkout/checkout.html';
-        </script>
-    </head>
-    <body>
+<!DOCTYPE html>
+<html lang="en" class="html-en">
 
-    </body>
+<head>
+    <title>Cart</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet/less" href="checkout/styles/main.less">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body class='body'>
+    <div class="container-fluid loader">
+        <div class="loader-wrap">
+            <img src="checkout/resources/loading.gif" alt="loader">
+        </div>
+    </div>
+    <div class="container-fluid header">
+        <div class="col-xs-6 col-sm-5 col-md-5 col-lg-4 checkout">
+            <span><h1>Checkout Page</h1></span>
+        </div>
+        <div class="currency-options col-xs-4 col-sm-3 col-md-2 col-lg-1 pull-right">
+            <select type="select" class="form-control currency-select">
+                <option class="currency-option" value="USD">USD</option>
+                <option class="currency-option" value="EUR">EUR</option>
+                <option class="currency-option" value="GBP">GBP</option>
+            </select>
+        </div>
+    </div>
+    <div class="container-fluid cart-body">
+        <div class="add-to-cart col-xs-12 col-sm-12 col-md-7 col-lg-7">
+        </div>
+        <div class="cart col-xs-12 col-sm-12 col-md-5 col-lg-5">
+        </div>
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="common/js/jquery.initialize.js"></script>
+    <script type="text/javascript" src="checkout/js/scripts.js"></script>
+    <script type="text/javascript" src="common/js/data.js"></script>
+</body>
+
 </html>
