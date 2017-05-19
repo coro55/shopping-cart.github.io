@@ -234,17 +234,19 @@ function urlParam() {
 }
 
 function pushProdsToLocal() {
-    var prod = [];
+    var ids = [];
     $('.prod-in-cart').each(function () {
         var item = [];
         var id = $('.qty-input', this).attr('data-unit');
         var name = $('.prod-name-cart', this).text();
         var qty = $('.qty-input', this).val();
         var price = $('.currency', this).text() + $('.unit-val', this).text();
-        item.push(id, name, qty, price);
-        prod.push(item);
-    })
-    localStorage['prod'] = JSON.stringify(prod);
+        ids.push(id);
+        sessionStorage.setItem(id+'-name', name);
+        sessionStorage.setItem(id+'-qty', qty);
+        sessionStorage.setItem(id+'-price', price);
+    });
+    sessionStorage.setItem('prodids', JSON.stringify(ids));
 }
 
 $(document).ready(function () {
